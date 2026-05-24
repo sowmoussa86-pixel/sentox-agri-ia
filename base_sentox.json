@@ -1,0 +1,30 @@
+[
+    {
+        "lot_id": "LOT-20260517162239",
+        "culture": "riz",
+        "surface": 0.0,
+        "eau": 0.0,
+        "npk": {
+            "N": 0.0,
+            "P": 0.0,
+            "K": 0.0
+        },
+        "pesticide": 0.0,
+        "score": " SAFE",
+        "date": "20260517162239"
+    },
+    {
+        "lot_id": "LOT-20260524155415",
+        "culture": "tomate",
+        "surface": 2.0,
+        "eau": 16000.0,
+        "npk": {
+            "N": 300.0,
+            "P": 140.0,
+            "K": 140.0
+        },
+        "pesticide": 0.8,
+        "score": " SAFE",
+        "date": "20260524155415"
+    }
+]
