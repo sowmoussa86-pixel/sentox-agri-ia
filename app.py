@@ -1,5 +1,5 @@
 import streamlit as st
-from cultures import base_cultures
+from cultures import pesticides_db
 from pesticides import base_pesticides
 
 st.set_page_config(page_title="SENTOX AGRI IA", layout="wide")
@@ -9,14 +9,14 @@ st.write("Plateforme intelligente de toxicologie agricole")
 
 culture = st.selectbox(
     "Choisir une culture",
-    list(base_cultures.keys())
+    list(pesticides_db.keys())
 )
 
 if culture:
 
     st.subheader(f"Culture sélectionnée : {culture}")
 
-    data = base_cultures[culture]
+    data = pesticides_db[culture]
 
     st.write("### Informations générales")
     st.write(f"💧 Eau : {data['eau']}")
