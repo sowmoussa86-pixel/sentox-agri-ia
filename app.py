@@ -1,113 +1,47 @@
-from cultures import pesticides_db
+import streamlit as st
+from cultures import base_cultures
 from pesticides import base_pesticides
 
-print("===================================")
-print("   SENTOX AGRI - VERSION IA")
-print("===================================")
+st.set_page_config(page_title="SENTOX AGRI IA", layout="wide")
 
-surface = float(input("Entrer surface (ha) : "))
+st.title("🌾 SENTOX AGRI - VERSION IA")
+st.write("Plateforme intelligente de toxicologie agricole")
 
-culture = input("Entrer culture : ").strip().lower()
-
-# Vérification culture
-if culture not in pesticides_db:
-    print("\n❌ Culture non reconnue")
-    print("\nCultures disponibles :")
-
-    for c in pesticides_db.keys():
-        print("-", c)
-
-    exit()
-
-# Récupération pesticides
-liste_pesticides = pesticides_db[culture]
-
-print("\n===================================")
-print(" PESTICIDES DISPONIBLES ")
-print("===================================")
-
-for i, p in enumerate(liste_pesticides):
-
-    nom = p["nom"]
-
-    print(
-        f"{i+1}. {nom} | "
-        f"Risque={p['risque']} | "
-        f"Efficacité={p['efficacite']}"
-    )
-
-print("===================================")
-
-choix = int(input("Choisir pesticide : ")) - 1
-
-if choix < 0 or choix >= len(liste_pesticides):
-    print("❌ Choix invalide")
-    exit()
-
-selection = liste_pesticides[choix]
-
-nom_pesticide = selection["nom"]
-
-# Vérification pesticide
-if nom_pesticide not in base_pesticides:
-    print("❌ Pesticide absent de la base")
-    exit()
-
-data = base_pesticides[nom_pesticide]
-
-# Calcul dose totale
-dose_ha = selection["dose"]
-dose_totale = dose_ha * surface
-
-# Score SENTOX
-score = (
-    selection["efficacite"] * 2
-    - selection["risque"]
+culture = st.selectbox(
+    "Choisir une culture",
+    list(base_cultures.keys())
 )
 
-# Interprétation
-if score >= 15:
-    niveau = "SAFE"
+if culture:
 
-elif score >= 10:
-    niveau = "MODÉRÉ"
+    st.subheader(f"Culture sélectionnée : {culture}")
 
-else:
-    niveau = "DANGEREUX"
+    data = base_cultures[culture]
 
-# Affichage
-print("\n===================================")
-print(" RESULTATS IA SENTOX ")
-print("===================================")
+    st.write("### Informations générales")
+    st.write(f"💧 Eau : {data['eau']}")
+    st.write(f"☠ Toxicité : {data['toxicite']}")
+    st.write(f"⏳ Délai : {data['delai']}")
 
-print(f"\nCulture : {culture}")
-print(f"Pesticide : {nom_pesticide}")
+    st.write("### Pesticides recommandés")
 
-print(f"\nSurface : {surface} ha")
+    for pesticide in data["pesticides"]:
 
-print(f"\nDose recommandée : {dose_ha} L/ha")
-print(f"Dose totale : {dose_totale} L")
+        nom = pesticide.lower()
 
-print("\n----- TOXICOLOGIE -----")
+        if nom in base_pesticides:
 
-print(f"DL50 : {data['DL50']}")
-print(f"Toxicité : {data['toxicite']}")
-print(f"Risques : {data['risques']}")
+            p = base_pesticides[nom]
 
-print("\n----- ECOTOXICOLOGIE -----")
+            st.success(f"Pesticide : {nom}")
 
-print(f"Ecotoxique : {data['ecotoxique']}")
-print(f"Abeilles : {data['abeilles']}")
-print(f"Poissons : {data['poissons']}")
+            st.write(f"Dose : {p['dose']}")
+            st.write(f"DL50 : {p['DL50']}")
+            st.write(f"Cancérogène : {p['cancerogene']}")
+            st.write(f"Écotoxique : {p['ecotoxique']}")
+            st.write(f"Abeilles : {p['abeilles']}")
+            st.write(f"Poissons : {p['poissons']}")
+            st.write(f"Risques : {p['risques']}")
 
-print("\n----- IA SENTOX -----")
-
-print(f"Efficacité : {selection['efficacite']}/10")
-print(f"Risque : {selection['risque']}/3")
-
-print(f"\nSCORE SENTOX : {score}")
-print(f"NIVEAU : {niveau}")
-
-print("\n===================================")
-print(" ANALYSE TERMINEE ")
-print("===================================")
+        else:
+            st.error(f"{nom} non trouvé dans la base pesticides")
